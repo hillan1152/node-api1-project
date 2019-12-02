@@ -53,6 +53,21 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
+// DELETE Removes the user with the specified id and returns deleted user.
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id
+
+    db.remove(id)
+        .then(removed => {
+            if(removed){
+                res.status(202).json({ message: "Removed Successfully"})
+        }   else {
+                res.status(404).json({ message: "The user with the specified ID does not exist." })
+        }})
+        .catch(error => {
+            res.status(500).json({ error: "The user could not be removed" })
+        })
+})
 
 
 //Set up port
