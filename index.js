@@ -37,6 +37,21 @@ server.get('/api/users', (req, res) => {
         })
 })
 
+// GET Users based on specified ID.
+server.get('/api/users/:id', (req, res) => {
+    const id = req.params.id
+    db.findById(id)
+        .then(thing => {
+            if(thing){
+                res.status(200).json(thing)
+            } else {
+                res.status(404).json({ message: "The user with the specified ID does not exist." })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ error: "The user information could not be retrieved." })
+        })
+})
 
 
 
