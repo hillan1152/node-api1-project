@@ -17,7 +17,7 @@ server.post('/api/users', (req, res) => {
     } else {
     db.insert(dbData)
         .then(thing => {
-            res.status(201).json(thing);
+            res.status(201).json({...thing, ...dbData});
         })
         .catch(error => {
             res.status(500).json({ error: "The users information could not be retrieved." })
@@ -69,6 +69,29 @@ server.delete('/api/users/:id', (req, res) => {
         })
 })
 
+// PUT Request updates the user with specified ID, using data from the request body. Reutrns the modified document.
+server.put('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    const userData = req.body;
+
+    db.findById(id)
+        .then(users => {
+            if(!users){
+                res.status(404).json({ message: 'The user with the specified ID does not exist.' })
+            }
+        })
+    if(!userData.name || !userData.bio){
+        res.status(400).json({ errorMessage: 'Please provide name and bio for the user'})
+    } else {
+    db.update(id, userData)
+        .then(change => {
+            res.status(200).json({ user: `user ${id} was updated`})
+        })
+        .catch(err => {
+            console.log('Error on PUT /users/:id', err)
+            res.status(500).json({ error: 'The user information could not be modified '})
+        })
+}})
 
 //Set up port
 const port = 3333;
