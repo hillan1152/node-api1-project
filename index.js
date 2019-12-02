@@ -7,6 +7,25 @@ const server = express();
 //Parse JSON from body
 server.use(express.json());
 
+
+// POST REQUEST Create user using the info sent inside the request body
+server.post('/api/users', (req, res) => {
+    const dbData = req.body;
+
+    if(!dbData.name || !dbData.bio){
+        res.status(400).json({ errorMessage: "Please provide name and bio for the user." })
+    } else {
+    db.insert(dbData)
+        .then(thing => {
+            res.status(201).json(thing);
+        })
+        .catch(error => {
+            res.status(500).json({ error: "The users information could not be retrieved." })
+        })}
+})
+
+
+
 // GET USERS Returns array of all user objects contained inside db.
 server.get('/api/users', (req, res) => {
     db.find()
@@ -14,13 +33,10 @@ server.get('/api/users', (req, res) => {
             res.status(200).json(hubs)
         })
         .catch(error => {
-            req.cancel(error);
-            res.status(500).json({ message: "The user with the specified ID does not exist." })
+            res.status(500).json({ error: "The users information could not be retrieved." })
         })
 })
 
-
-// POST REQUEST
 
 
 
