@@ -1,11 +1,14 @@
 // implement your API here
 const express = require('express');
+const cors = require('cors');
 const db = require('./data/db.js');
 
-const server = express();
 
+const server = express();
+server.use(cors());
 //Parse JSON from body
-server.use(express.json());
+server.use(express.json())
+
 
 
 // POST REQUEST Create user using the info sent inside the request body
@@ -38,6 +41,7 @@ server.get('/api/users', (req, res) => {
 })
 
 // GET Users based on specified ID.
+
 server.get('/api/users/:id', (req, res) => {
     const id = req.params.id
     db.findById(id)
